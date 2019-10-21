@@ -1,0 +1,204 @@
+########################################
+#Exercise1
+########################################
+
+# First change directory to where we want to store the data
+cd ~/Stat480/hb-workspace/input/ncdc
+
+# Download the following script
+# Comments in the file reference the original source.
+curl -O https://raw.githubusercontent.com/coatless/stat490uiuc/master/ncdc/image/ncdc_data.sh
+
+# Change permissions so the script can be run.
+chmod u+x ncdc_data.sh 
+
+# Open ncdc_data.sh and change the output file to input/ncdc/all/hw5. 
+# Use :wq to save and quit
+vi ncdc_data.sh
+
+
+# Start and end years are specified as parameters to the script.
+# The weather period we are interested in is from 1901 to 1910.
+./ncdc_data.sh 1915 1924
+
+# View the data files, we've stored data from 1915 to 1924 in /all/hw5.
+ls all/hw5
+
+# Make a directory structure on HDFS where we will put our data.
+hadoop fs -mkdir -p input/ncdc/all/hw5
+
+# We now need to put the files on HDFS.
+hadoop fs -put ~/Stat480/hb-workspace/input/ncdc/all/hw5/* input/ncdc/all/hw5
+
+# We can see that the files have been copied to the distributed file system.
+hadoop fs -ls input/ncdc/all/hw5
+
+# Go to python directory
+cd ~/Stat480/hb-workspace/ch02-mr-intro/src/main/python
+
+# Write min_temp.py's
+vi min_temp_month_map.py
+vi min_temp_month_reduce.py
+
+# Accessable
+chmod a+x ~/Stat480/hb-workspace/ch02-mr-intro/src/main/python/min_temp_month_map.py
+chmod a+x ~/Stat480/hb-workspace/ch02-mr-intro/src/main/python/min_temp_month_reduce.py
+
+# Python Streaming on all data files (1915-1924) without a combiner
+hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
+  -files /home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/min_temp_month_map.py,\
+/home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/min_temp_month_reduce.py \
+  -input input/ncdc/all/hw5 \
+  -output outputpy \
+  -mapper "/home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/min_temp_month_map.py" \
+  -reducer "/home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/min_temp_month_reduce.py" 
+
+# See result files.
+hadoop fs -ls outputpy
+
+# View results.
+hadoop fs -cat outputpy/part*
+
+# Result
+#[chenziz2@sp19-0003 python]$ hadoop fs -cat outputpy/part*
+#01	-45.6
+#02	-47.8
+#03	-39.4
+#04	-31.1
+#05	-7.8
+#06	-2.8
+#07	1.1
+#08	0.0
+#09	-13.9
+#10	-28.9
+#11	-36.1
+#12	-42.8
+
+# Need to delete outputpy directory to use outputpy directory again.
+hadoop fs -rm -r -f outputpy
+
+########################################
+#Exercise2
+########################################
+
+# Write maxmincount_temp.py
+vi maxmincount_temp_reduce.py
+
+# Accessable
+chmod a+x ~/Stat480/hb-workspace/ch02-mr-intro/src/main/python/maxmincount_temp_reduce.py
+
+# Python Streaming on all data files (1915-1924) without a combiner
+hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
+  -files /home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/min_temp_month_map.py,\
+/home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/maxmincount_temp_reduce.py \
+  -input input/ncdc/all/hw5 \
+  -output outputpy \
+  -mapper "/home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/min_temp_month_map.py" \
+  -reducer "/home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/maxmincount_temp_reduce.py" 
+
+# View results.
+hadoop fs -cat outputpy/part*
+
+# Result
+[chenziz2@sp19-0003 python]$ hadoop fs -cat outputpy/part*
+01	-50.08	44.96	6500
+02	-54.04	44.96	6003
+03	-38.92	62.96	6572
+04	-23.98	77.0	6285
+05	17.96	82.94	6571
+06	26.96	89.06	6342
+07	33.98	100.04	6581
+08	32.0	86.0	6505
+09	6.98	75.92	6183
+10	-20.02	62.06	6502
+11	-32.98	50.0	6294
+12	-45.04	50.0	6504
+
+# Need to delete outputpy directory to use outputpy directory again.
+hadoop fs -rm -r -f outputpy
+
+########################################
+#Exercise3
+########################################
+
+# Write quality_temp_month.py's
+vi quality_temp_month_map.py
+vi quality_temp_month_reduce.py
+
+# Accessable
+chmod a+x ~/Stat480/hb-workspace/ch02-mr-intro/src/main/python/quality_temp_month_map.py
+chmod a+x ~/Stat480/hb-workspace/ch02-mr-intro/src/main/python/quality_temp_month_reduce.py
+
+# Python Streaming on all data files (1915-1924) without a combiner
+hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
+  -files /home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/quality_temp_month_map.py,\
+/home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/quality_temp_month_reduce.py \
+  -input input/ncdc/all/hw5 \
+  -output outputpy \
+  -mapper "/home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/quality_temp_month_map.py" \
+  -reducer "/home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/quality_temp_month_reduce.py" 
+
+# View results.
+hadoop fs -cat outputpy/part*
+
+# Result
+[chenziz2@sp19-0003 python]$ hadoop fs -cat outputpy/part*
+01	6500	6500
+02	6003	6005
+03	6574	6595
+04	6286	6286
+05	6571	6578
+06	6342	6365
+07	6581	6595
+08	6505	6508
+09	6183	6202
+10	6502	6502
+11	6294	6294
+12	6504	6504
+
+# Need to delete outputpy directory to use outputpy directory again.
+hadoop fs -rm -r -f outputpy
+
+########################################
+#Exercise4
+########################################
+do I need to use combiner for exercise4
+
+# Write mean_temp_reduce.py
+vi mean_temp_reduce.py
+
+# Accessable
+chmod a+x ~/Stat480/hb-workspace/ch02-mr-intro/src/main/python/mean_temp_reduce.py
+
+# Python Streaming on all data files (1915-1924) without a combiner
+hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
+  -files /home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/min_temp_month_map.py,\
+/home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/mean_temp_reduce.py \
+  -input input/ncdc/all/hw5 \
+  -output outputpy \
+  -mapper "/home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/min_temp_month_map.py" \
+  -reducer "/home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/mean_temp_reduce.py" 
+
+# Result
+[chenziz2@sp19-0003 python]$ hadoop fs -cat outputpy/part*
+01	-8.13858461538
+02	-8.37404631018
+03	-4.85763846622
+04	1.01907716786
+05	7.09373002587
+06	12.0541784926
+07	15.80205136
+08	13.4259800154
+09	9.11060973637
+10	3.68974161796
+11	-1.7658087067
+12	-5.91194649446
+
+# Need to delete outputpy directory to use outputpy directory again.
+hadoop fs -rm -r -f outputpy
+
+
+cd ~/Stat480/hb-workspace/input/ncdc/sample.txt
+cd ~/Stat480/hb-workspace/ch02-mr-intro/src/main/python
+cat sample.txt | /home/chenziz2/Stat480/hb-workspace/ch02-mr-intro/src/main/python/quality_temp_month_map.py
+
