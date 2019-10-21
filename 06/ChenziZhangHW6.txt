@@ -1,0 +1,145 @@
+# My reference book is "Hadoop: The Definitive Guide" by Tom White
+# If there is any code that looks similar to the book, they're modified codes by Chenzi Zhang.
+
+# Data 'Data1920s.txt' and 'StationCodes.txt' are provided from STAT480 Spring 19,
+# University of Illinois, Urbana-Champaign. Modified from the reference book.
+
+# Run in Mac Terminal
+# First change to hb-workspace directory, all my result document will be stored here
+cd ~/Stat480/hb-workspace/
+
+# run the script
+pig -x local ch16-pig/src/main/pig/ChenziZhangHW6.pig
+
+# Results are saved in 6 directories under '~/hb-workspace/'
+#------------------------------------------------------------------
+############
+#Exercise 1#
+############
+
+cd hw6_1/
+
+# print result
+cat part*
+
+#result
+#usafID wbanID  year temperature(tenths of degrees Celsius) station
+011060	99999	1929	0	ROEST III
+011060	99999	1929	11	ROEST III
+011060	99999	1929	-50	ROEST III
+011060	99999	1929	-39	ROEST III
+011060	99999	1929	-28	ROEST III
+
+#remove result if desired
+rm -rf hw6_1
+
+#------------------------------------------------------------------
+############
+#Exercise 2#
+############
+cd ~/Stat480/hb-workspace/hw6_2/
+
+# print result
+cat part*
+
+#result
+#Station, Number of Obs, Max Temp, Min Temp, Average Temp
+#(Temperature Unit: tenths of degrees Celsius)
+LVIV	332	289	-400	60.653614457831324
+RIGA	166	50	-278	-63.433734939759034
+ROME	61	189	22	116.55737704918033
+WICK	368	156	-17	64.70108695652173
+BREST	268	239	39	129.3320895522388
+LARNE	275	167	0	77.47636363636363
+PINSK	159	278	-100	68.00628930817611
+TIREE	276	139	22	80.3731884057971
+AACHEN	225	122	-200	10.848888888888888
+BREMEN	303	278	-72	106.13531353135313
+
+#remove result if desired
+rm -rf hw6_2
+
+#------------------------------------------------------------------
+############
+#Exercise 3#
+############
+
+cd ~/Stat480/hb-workspace/hw6_3_station/
+
+# print result
+cat part*
+
+
+#I get the station with lowest temperature named SODANKYLA
+#Station, Number of Obs, Max Temp, Min Temp, Average Temp
+#(Temperature Unit: tenths of degrees Celsius)
+SODANKYLA	7638	311	-456	-2.8596491228070176
+
+/* remove result if desired */
+rm -rf hw6_3_station
+
+cd ~/Stat480/hb-workspace/hw6_3/
+
+# print result
+cat part*
+
+#result
+#Year, Station,  Min Temp, Average Temp,  Max Temp
+#(Temperature Unit: tenths of degrees Celsius)
+1920	SODANKYLA	-344	14.904371584699453	272
+1921	SODANKYLA	-417	-5.7967032967032965	233
+1922	SODANKYLA	-400	-9.691666666666666	267
+1923	SODANKYLA	-394	-5.237877401646844	233
+1924	SODANKYLA	-456	0.8650865998176845	289
+1925	SODANKYLA	-378	-2.5712971481140756	311
+1926	SODANKYLA	-411	-12.684692942254813	261
+
+#remove result if desired
+rm -rf hw6_3;
+
+#------------------------------------------------------------------
+############
+#Exercise 4#
+############
+
+cd ~/Stat480/hb-workspace/hw6_4_station/
+
+# print result
+cat part*
+
+#I get the station and year of Max Temp Deviation above Average Temp
+#station, Max Temp Deviation above Avg Temp, Max Temp Deviation below Avg Temp
+#(Temperature Unit: tenths of degrees Celsius)
+ABERDEEN/DYCE AIRPO	423.15497382198953	387.84502617801047
+
+#remove result if desired
+rm -rf hw6_4_station;
+
+
+cd ~/Stat480/hb-workspace/hw6_4/
+
+# print result
+cat part*
+
+#result
+#Station, Year, Max Temp Deviation below Avg Temp
+#(Temperature Unit: tenths of degrees Celsius)
+ABERDEEN/DYCE AIRPO	1926	97.5126050420168
+ABERDEEN/DYCE AIRPO	1927	382.4566473988439
+ABERDEEN/DYCE AIRPO	1928	241.248730964467
+ABERDEEN/DYCE AIRPO	1929	127.47424892703863
+
+#remove result if desired
+rm -rf hw6_4;
+
+
+
+
+
+
+
+
+
+
+
+
