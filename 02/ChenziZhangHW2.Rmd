@@ -1,0 +1,120 @@
+---
+title: "STAT480 Homework2"
+author: "Chenz Zhang, NetID chenziz2"
+date: "2/6/2019"
+output: 
+    pdf_document:
+      toc: yes
+    html_document:
+      toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Exercise 1
+
+```{r}
+library(biganalytics)
+setwd("~/Stat480/RDataScience/AirlineDelays")
+x <- attach.big.matrix("air0708.desc")  #We got this desc from homework1
+JulyInds <- which(x[,"Month"] == 7)
+Probs <- seq(0.50,0.99,0.01)
+delayQuantiles <- quantile(x[JulyInds, "DepDelay"], Probs, 
+                           na.rm = TRUE)
+print(delayQuantiles)
+```
+
+Magnitudes and frequency of delayed departures:  
+
+* The median of delay time is 0 and over half of the flights didn't delay.  (frequency)
+* 23% of the fights had serious delay which means they delayed over 15 mins.  (magnitudes)
+
+
+# Exercise 2  
+
+```{r}
+y <- x[JulyInds,]
+YearInds <- split(1:length(JulyInds),y[,"Year"])
+
+delayQuantiles2 <- foreach( year = YearInds, .combine=cbind) %do% {
+  quantile(y[year, "DepDelay"], Probs, na.rm = TRUE)
+}
+
+print(delayQuantiles2)
+```
+
+Virtualize data from 2007 to 2008:  
+```{r}
+library(ggplot2)
+df <- data.frame(delay07 = delayQuantiles2[,1], delay08 = delayQuantiles2[,2],
+                 quantile = seq(0.50,0.99,0.01))
+plot1 <- ggplot(df,aes(quantile)) +
+         geom_line(aes(y = delay07, color = "delay07")) + 
+         geom_line(aes(y = delay08, color = "delay08")) +
+         ylab("Delay Time (Mins)")
+plot1
+```
+
+* **Difference**: 
+    - Delay time in 2007 has larger magnitudes than delay time in 2008 when they are under the same quantile.  
+    - 25% of the fights in 2007 and 20% of the fights in 2008 had serious delay which means they delayed over 15 mins.  
+    - The median of delay time in 2007 is 0, but the median of delay time in 2008 is -1.  
+* **Similarity**: 
+    - Delay time in 2007 and 2008 have the same trend (increasing) when quantile increases.  
+    - About half of the fights in 2007 and 2008 delayed.  
+
+# Exercise 3  
+
+```{r}
+fit1 <- biglm.big.matrix(DepDelay ~ Month + DayOfWeek, data = x)
+sumfit1 <- summary(fit1)
+summary(fit1)$rsq
+sumfit1
+```
+
+The model suggests the relationship between DepDelay and the DayOfWeek and Month should be:  
+\[DepDelay = 11.2030 - 0.1914 \times Month + 0.1884 \times DayOfWeek\]  
+
+From the r-square result which is 0.0004415451 (extremely small), we can see the model lacks goodness of fit.  
+Two predictors are individually significant according to small p-value.  
+Month has negative effect on delay time value.(positive effect on delay condition)  
+DayOfWeek has positive effect on delay time value.(negative effect on delay condition)  
+
+* Delay time could be influenced by a lot of extra factors sach as location rather than date.  
+* Lack of goodness of fit means that Month and DayOfWeek cannot explain delay time by a linear model.  
+* Straight linear trend of Month and DayOfWeek cannot meet the real condition.  
+
+Some issues will appear by using this straight linear model:  
+
+* When Month = DayOfWeek = 0, delay time still exists as 11.2030.  
+* When the Month increases and DayOfWeek doesn't change, delay time will decrease.  
+  This is different from the reality. And it cannot explain seasonal weather change's influence.  
+
+
+# Exercise 4  
+
+```{r}
+fit2 <- biglm.big.matrix(DepDelay ~ I((Month-6)^2) + I(DayOfWeek^2), data = x)
+sumfit2 <- summary(fit2)
+summary(fit2)$rsq
+sumfit2
+```
+
+Interpret:  
+
+* Intercept: When Month = 6 and DayOfWeek = 0, delay time is 9.8811.  
+* Delays become worse in winter and better in summer. Comparing delay time on the same DayOfWeek, delay in June is the lowest.   
+* Quadratic DayOfWeek's coefficient is 0.0235. Delays on weekends is much worse than those on weekdays.  
+
+From the r-square result which is 0.0002049134 (extremely small), we can see the model lacks goodness of fit.  
+Two quadratic form predictors are individually significant according to small p-value.  
+I((Month - 6)^2) and I(DayOfWeek^2) both have positive effect on delay time value.(negative effect on delay condition)  
+
+This model is even worse than the model in Exercise 3 for smaller r-square. It might because the model in this form is still
+uncorrect.  
+
+Therefore, sometimes the model which seems match the real situation performs worse than the original usless model.  
+
+
