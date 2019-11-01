@@ -1,0 +1,105 @@
+# Homework7 Report, Chenzi Zhang, NetID: chenziz2
+
+# Command line code in 'ChenziZhangHW7.txt' and 'ChenziZhangHW7.hive' 
+# was modified by Chenzi Zhang from 
+# Hadoop: The Definitive Guide, Fourth Edition by Tom White
+# for homeowork in the Spring 2018 section of Stat 480: Data Science Foundations at the University of Illinois.
+
+# The base code in hadoop-book-4e is from Tom White's github, and modifications are by Chenzi Zhang.
+
+# I have uploaded 'stocks.csv' (downloaded from https://github.com/oreillymedia/programming_hive) to 'chenziz2/input/' by Rstudio Cloud
+
+# Go to the work directory
+cd ~/Stat480/hb-workspace/ch17-hive/hw7
+
+# Run the script at command line
+hive -f input/ChenziZhangHW7.hive
+
+# Results printed in the Terminal are as following:
+# (Lines begin with '#' are notes which were not shown in the Terminal.)
+
+##############
+# Exercise 1 #
+##############
+
+#Show 5 records from table stocks
+#Columns:
+#market, stocksymbol, datemdy,  price_open, price_high, price_low, price_close, volumn, price_adj_close
+
+NASDAQ	 ABXA	     2009-12-09	2.55	    2.77        2.5	   2.67	        158500	2.67
+NASDAQ	 ABXA	     2009-12-08	2.71	    2.74	2.52       2.55	        131700	2.55
+NASDAQ	 ABXA	     2009-12-07	2.65	    2.76	2.65	   2.71     	174200	2.71
+NASDAQ	 ABXA	     2009-12-04	2.63	    2.66	2.53	   2.65	        230900	2.65
+NASDAQ	 ABXA	     2009-12-03	2.55	    2.62	2.51	   2.6	        360900	2.6
+Time taken: 0.375 seconds, Fetched: 5 row(s)
+
+
+##############
+# Exercise 2 #
+##############
+
+#Show 5 records from table ibm
+#Columns:
+#datemdy,  price_open, price_high, price_low, price_close, volumn, price_adj_close
+
+2010-02-08 123.15      123.22	   121.74     121.88       5718500	121.88
+2010-02-05 123.04      123.72	   121.83     123.52	   8617000	122.97
+2010-02-04 125.19      125.44	   122.9      123.0	   9126900	122.45
+2010-02-03 125.16      126.07	   125.07     125.66	   4177100	125.1
+2010-02-02 124.79      125.81	   123.95     125.53	   5899900	124.97
+Time taken: 0.142 seconds, Fetched: 5 row(s)
+
+#Use Hive queries find the highest daily high price for IBM and the date on which those max high prices occured.
+#Columns:
+#datemdy,   max price_high
+
+1968-04-15	649.88
+Time taken: 37.42 seconds, Fetched: 1 row(s)
+
+#Use SORT commend to check the result, I find that they have the same result.
+#Columns:
+#datemdy,   max price_high
+
+1968-04-15	649.88
+Time taken: 37.792 seconds, Fetched: 1 row(s)
+
+#Use Hive queries find the lowest daily low price for IBM and the date on which those min low prices occured.
+#Columns:
+#datemdy,   min price_low
+
+1993-08-16	40.63
+Time taken: 38.019 seconds, Fetched: 1 row(s)
+
+#Use SORT commend to check the result, I find that they have the same result.
+#Columns:
+#datemdy,   min price_low
+
+1993-08-16	40.63
+Time taken: 38.754 seconds, Fetched: 1 row(s)
+
+##############
+# Exercise 3 #
+##############
+
+#Create view 'max_daily_spreads' for the max daily spread for each stock symbol.
+#Obtain the minimum, average, and maximum daily spreads from the data in the view 'max_daily_spreads'.
+#Columns:
+#min_daily_spread, average_daily_spread, max_daily_spread
+
+0.0	               9.29882749493392	     146.5
+Time taken: 42.651 seconds, Fetched: 1 row(s)
+
+##############
+# Exercise 4 #
+##############
+
+#Show the company with the largest daily price spread for each market, followed with price_high, price_low and the date which it occurred.
+
+#Columns:
+#market, stocksymbol, largest_daily_price_spread, price_high, price_low, datemdy
+
+NASDAQ	 INFY	      146.5	                  681.0	      534.5	 2000-02-11
+NYSE	 GTC	      67.54999	                  507.12      439.57	 2000-04-04
+Time taken: 64.686 seconds, Fetched: 2 row(s)
+
+

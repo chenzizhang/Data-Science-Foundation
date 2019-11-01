@@ -1,0 +1,88 @@
+-- Command line code in ChenziZhang.hive' 
+-- was modified by Chenzi Zhang from 
+-- Hadoop: The Definitive Guide, Fourth Edition by Tom White
+-- for homeowork in the Spring 2018 section of Stat 480: Data Science Foundations at the University of Illinois.
+
+-- exercise1
+
+-- create records table to populate
+CREATE TABLE stocks (market STRING, stocksymbol STRING, datemdy STRING, price_open FLOAT, price_high FLOAT, price_low FLOAT, price_close FLOAT, volume INT, price_adj_close FLOAT)
+ROW FORMAT DELIMITED
+  FIELDS TERMINATED BY ',';
+
+-- populate table with data from sample.txt file
+LOAD DATA LOCAL INPATH 'input/stocks.csv'
+OVERWRITE INTO TABLE stocks;
+
+-- see the rows in records
+-- we can see the data that was added
+SELECT * FROM stocks LIMIT 5;
+
+-- exercise2
+
+CREATE TABLE ibm (datemdy STRING, price_open FLOAT, price_high FLOAT, price_low FLOAT, price_close FLOAT, volume INT, price_adj_close FLOAT);
+
+FROM stocks
+INSERT OVERWRITE TABLE ibm
+  SELECT datemdy, price_open, price_high, price_low, price_close, volume, price_adj_close
+  WHERE market = 'NYSE' AND stocksymbol = 'IBM';
+
+SELECT * FROM ibm LIMIT 5;
+
+-- exercise2.max
+
+SELECT ibm.datemdy, ibm.price_high
+FROM (
+  SELECT MAX(price_high) AS max_price
+  FROM ibm
+)maxp JOIN ibm ON (maxp.max_price = ibm.price_high);
+
+-- exercise2.max: check by SORT
+
+FROM ibm
+SELECT datemdy, price_high
+SORT BY price_high DESC LIMIT 1;
+
+-- exercise2.min
+
+SELECT ibm.datemdy, ibm.price_low
+FROM (
+  SELECT MIN(price_low) AS min_price
+  FROM ibm
+)minp JOIN ibm ON (minp.min_price = ibm.price_low);
+
+-- exercise2.min: check by SORT
+
+FROM ibm
+SELECT datemdy, price_low
+SORT BY price_low ASC LIMIT 1;
+
+-- exercise3
+
+CREATE VIEW max_daily_spreads (stocksymbol, market, max_daily_spread)
+AS
+SELECT stocksymbol, market, MAX(price_high - price_low)
+FROM stocks
+GROUP BY stocksymbol, market;
+
+SELECT MIN(max_daily_spread), AVG(max_daily_spread), MAX(max_daily_spread)
+FROM max_daily_spreads;
+
+-- exercise4
+
+CREATE VIEW market_records (market, stocksymbol, spread, price_high, price_low, datemdy)
+AS
+SELECT market, stocksymbol, (price_high - price_low), price_high, price_low, datemdy 
+FROM stocks;
+
+SELECT mt.market, stocksymbol, mt.largest_spread, price_high, price_low, datemdy
+FROM (
+  SELECT market, MAX(max_daily_spread) AS largest_spread
+  FROM max_daily_spreads
+  GROUP BY market
+) mt JOIN market_records ON (mt.market = market_records.market AND mt.largest_spread = market_records.spread);
+
+
+
+
+
