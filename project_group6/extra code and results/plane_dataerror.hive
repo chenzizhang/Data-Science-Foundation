@@ -1,0 +1,34 @@
+--table airline
+CREATE TABLE air ( Year INT, Month INT, DayofMonth INT, DayofWeek INT, DepTime INT, 
+CRSDepTime INT, ArrTime INT, CRSArrTime INT, UniqueCarrier STRING, FlightNum INT, TailNum STRING, 
+ActualElapsedTime INT, CRSElapsedTime INT, AirTime INT, ArrDelay INT, DepDelay INT, 
+Origin STRING, Dest STRING, Distance INT, TaxiIn INT, TaxiOut INT, Cancelled INT, CancellationCode INT, 
+Diverted INT, CarrierDelay INT, WeatherDelay INT, NASDelay INT, SecurityDelay INT, 
+LateAircraftDelay INT) 
+ROW FORMAT DELIMITED 
+FIELDS TERMINATED BY ',';
+
+LOAD DATA LOCAL INPATH '0007.csv'
+OVERWRITE INTO TABLE air;
+
+--table plane
+CREATE TABLE plane (tailnum STRING, type STRING, manufacturer STRING, issuedate STRING, 
+model STRING, status STRING, aircrafttype STRING, enginetype STRING, year INT)
+ROW FORMAT DELIMITED 
+FIELDS TERMINATED BY ',';
+
+LOAD DATA LOCAL INPATH 'plane-data.csv'
+OVERWRITE INTO TABLE plane;
+
+--join plane and air
+CREATE TABLE airp AS 
+SELECT air.*, plane.manufacturer, plane.model, plane.issuedate, plane.year AS planeyear
+FROM  air LEFT OUTER JOIN plane ON (air.tailnum = plane.tailnum);
+
+--find invalid data
+SELECT DISTINCT year, tailnum, uniquecarrier, model, issuedate, planeyear FROM airp
+WHERE planeyear>=2001 AND year = 2000; 
+
+
+
+

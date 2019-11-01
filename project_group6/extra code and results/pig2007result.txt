@@ -1,0 +1,20 @@
+Comair Inc.	233787	8851	0.037859246
+JetBlue Airways	191450	3710	0.019378427
+Mesa Airlines Inc.	294362	11287	0.038343944
+Aloha Airlines Inc.	46360	388	0.008369284
+Alaska Airlines Inc.	160185	2563	0.01600025
+Delta Air Lines Inc.	475889	6521	0.013702775
+Skywest Airlines Inc.	597882	14186	0.02372709
+United Air Lines Inc.	490002	11929	0.024344798
+American Airlines Inc.	633857	17924	0.028277671
+Frontier Airlines Inc.	97760	398	0.0040711947
+Hawaiian Airlines Inc.	56175	238	0.00423676
+Pinnacle Airlines Inc.	258851	7939	0.030670153
+Southwest Airlines Co.	1168871	9993	0.008549275
+Northwest Airlines Inc.	414526	7814	0.018850446
+Expressjet Airlines Inc.	434773	10800	0.024840549
+Continental Air Lines Inc.	323151	2951	0.009131954
+AirTran Airways Corporation	263159	2602	0.009887558
+Atlantic Southeast Airlines	286234	8920	0.031163314
+American Eagle Airlines Inc.	540494	22792	0.04216883
+US Airways Inc. (Merged with America West 9/05. Reporting for both starting 10/07.)	485447	8942	0.018420136

@@ -1,0 +1,11 @@
+Aloha Airlines Inc.	11036	173	0.01567597
+Alaska Airlines Inc.	154171	7506	0.0486862
+Delta Air Lines Inc.	908029	31569	0.03476651
+United Air Lines Inc.	776559	44159	0.056864966
+American Airlines Inc.	742265	29677	0.039981678
+Southwest Airlines Co.	911699	9039	0.009914457
+Northwest Airlines Inc.	551337	15340	0.027823273
+Trans World Airways LLC	267131	5254	0.019668253
+Continental Air Lines Inc.	393036	7296	0.018563185
+America West Airlines Inc. (Merged with US Airways 9/05. Stopped reporting 10/07.)	219160	9422	0.042991422
+US Airways Inc. (Merged with America West 9/05. Reporting for both starting 10/07.)	748624	28055	0.037475422
